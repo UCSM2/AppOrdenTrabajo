@@ -24,7 +24,14 @@ def menuOT():
 
 #Registrar 
 def insertOT():
-    print()
+    print("REGISTRAR ORDEN TRABAJO")
+    codigo=input("Codigo Documento: ")
+    encargado=input ()
+    descripcion=input ()
+    fecha= input ()
+    estado=input ()
+    conn=conectar
+    cur.execute("CALL sp_insertar_orden(%s, %s, %s, %s, %s)", (cod, encargado, desc, fecha, estado))
 
 #Borrar
 
