@@ -11,9 +11,20 @@ def conectarBD():
     )
 
 #Menu
-
+def menuOT():
+    print("\n SISTEMA ORDEN TRABAJO")
+    print("")
+    print("\n 1. Registrar Orden de Trabajo")
+    print("2. Modificar Orden Trabajo")
+    print("3. Eliminar Orden Trabajo")
+    print("4. Revisar información")
+    print("5. Finalizar")
+    print("")
+    return input("Opciones [1 - 5]")
 
 #Registrar 
+def insertOT():
+    print()
 
 #Borrar
 
