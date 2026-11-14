@@ -91,6 +91,23 @@ CREATE TABLE DetalleMateriales (
     CONSTRAINT FK_DetalleMateriales_Cabecera FOREIGN KEY (CodDocumento) REFERENCES CabeceraOrdenTrabajo(CodDocumento),
     CONSTRAINT FK_DetalleMateriales_Materiales FOREIGN KEY (CodMateriales) REFERENCES Materiales(CodMateriales)
 );
+
+--LOGIN
+CREATE TABLE usuarios (
+    cod_usuario SERIAL PRIMARY KEY,
+    username VARCHAR(60) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    rol VARCHAR(30) NOT NULL DEFAULT 'OPERADOR',
+    activo BOOLEAN NOT NULL DEFAULT TRUE,
+    fecha_creacion TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT chk_usuario_rol
+        CHECK (rol IN ('ADMINISTRADOR', 'SUPERVISOR', 'OPERADOR'))
+);
+
+CREATE INDEX idx_usuarios_username
+ON usuarios(username);
+
 --Indices Ordinarios
 CREATE INDEX IDX_Cabecera_Fecha ON CabeceraOrdenTrabajo (Fecha);
 CREATE INDEX IDX_Cabecera_Estado ON CabeceraOrdenTrabajo (Estado);
@@ -125,7 +142,7 @@ INSERT INTO Maquinaria (CodMaquinaria, DescripcionMaquinaria) VALUES
 ('MAQ002', 'Excavadora Hidráulica Komatsu PC3000'),
 ('MAQ003', 'Montacargas Industrial Toyota 8FGU25'),
 ('MAQ004', 'Grúa Móvil Automotriz Grove GMK5250'),
-('PER006', 'Operador de Maquinaria Pesada');
+('MAQ006', 'Operador de Maquinaria Pesada');
 
 INSERT INTO Persona (CodPersona, Especialidad) VALUES 
 ('PER001', 'Técnico Instrumentista'),
@@ -188,3 +205,118 @@ INSERT INTO DetalleMateriales (CodDocumento, CodMateriales, CantidadMateriales) 
 ('DOC0000003', 'MAT004', 152.00),
 ('DOC0000004', 'MAT002', 0.25),
 ('DOC0000005', 'MAT006', 2.00);
+
+
+--TRIGERRS
+CREATE OR REPLACE FUNCTION proteger_recurso_asignado()
+RETURNS TRIGGER
+LANGUAGE plpgsql
+AS $$
+DECLARE
+    existe_asignacion BOOLEAN := FALSE;
+    codigo_recurso CHAR(6);
+BEGIN
+
+    IF TG_TABLE_NAME = 'persona' THEN
+
+        codigo_recurso := OLD.CodPersona;
+
+        SELECT EXISTS (
+            SELECT 1
+            FROM DetallePersona d
+            INNER JOIN CabeceraOrdenTrabajo ot
+                ON ot.CodDocumento = d.CodDocumento
+            WHERE d.CodPersona = codigo_recurso
+              AND UPPER(ot.Estado) NOT IN ('FINALIZADA', 'CANCELADA')
+        ) INTO existe_asignacion;
+
+    ELSIF TG_TABLE_NAME = 'herramientas' THEN
+
+        codigo_recurso := OLD.CodHerramientas;
+
+        SELECT EXISTS (
+            SELECT 1
+            FROM DetalleHerramientas d
+            INNER JOIN CabeceraOrdenTrabajo ot
+                ON ot.CodDocumento = d.CodDocumento
+            WHERE d.CodHerramientas = codigo_recurso
+              AND UPPER(ot.Estado) NOT IN ('FINALIZADA', 'CANCELADA')
+        ) INTO existe_asignacion;
+
+    ELSIF TG_TABLE_NAME = 'maquinaria' THEN
+
+        codigo_recurso := OLD.CodMaquinaria;
+
+        SELECT EXISTS (
+            SELECT 1
+            FROM DetalleMaquinaria d
+            INNER JOIN CabeceraOrdenTrabajo ot
+                ON ot.CodDocumento = d.CodDocumento
+            WHERE d.CodMaquinaria = codigo_recurso
+              AND UPPER(ot.Estado) NOT IN ('FINALIZADA', 'CANCELADA')
+        ) INTO existe_asignacion;
+
+    ELSIF TG_TABLE_NAME = 'materiales' THEN
+
+        codigo_recurso := OLD.CodMateriales;
+
+        SELECT EXISTS (
+            SELECT 1
+            FROM DetalleMateriales d
+            INNER JOIN CabeceraOrdenTrabajo ot
+                ON ot.CodDocumento = d.CodDocumento
+            WHERE d.CodMateriales = codigo_recurso
+              AND UPPER(ot.Estado) NOT IN ('FINALIZADA', 'CANCELADA')
+        ) INTO existe_asignacion;
+
+    ELSIF TG_TABLE_NAME = 'repuesto' THEN
+
+        codigo_recurso := OLD.CodRepuesto;
+
+        SELECT EXISTS (
+            SELECT 1
+            FROM DetalleMateriales d
+            INNER JOIN Materiales m
+                ON m.CodMateriales = d.CodMateriales
+            INNER JOIN CabeceraOrdenTrabajo ot
+                ON ot.CodDocumento = d.CodDocumento
+            WHERE m.CodRepuesto = codigo_recurso
+              AND UPPER(ot.Estado) NOT IN ('FINALIZADA', 'CANCELADA')
+        ) INTO existe_asignacion;
+
+    END IF;
+
+    IF existe_asignacion THEN
+        RAISE EXCEPTION
+            'OPERACION DENEGADA: El recurso (%) esta asignado a una Orden de Trabajo activa.', TRIM(codigo_recurso)
+            USING ERRCODE = '23503';
+    END IF;
+
+    RETURN OLD;
+END;
+$$;
+
+CREATE TRIGGER trg_proteger_persona
+BEFORE DELETE ON Persona
+FOR EACH ROW
+EXECUTE FUNCTION proteger_recurso_asignado();
+
+CREATE TRIGGER trg_proteger_herramientas
+BEFORE DELETE ON Herramientas
+FOR EACH ROW
+EXECUTE FUNCTION proteger_recurso_asignado();
+
+CREATE TRIGGER trg_proteger_maquinaria
+BEFORE DELETE ON Maquinaria
+FOR EACH ROW
+EXECUTE FUNCTION proteger_recurso_asignado();
+
+CREATE TRIGGER trg_proteger_repuesto
+BEFORE DELETE ON Repuesto
+FOR EACH ROW
+EXECUTE FUNCTION proteger_recurso_asignado();
+
+CREATE TRIGGER trg_proteger_materiales
+BEFORE DELETE ON Materiales
+FOR EACH ROW
+EXECUTE FUNCTION proteger_recurso_asignado();
