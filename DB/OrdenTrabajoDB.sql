@@ -227,7 +227,7 @@ BEGIN
             INNER JOIN CabeceraOrdenTrabajo ot
                 ON ot.CodDocumento = d.CodDocumento
             WHERE d.CodPersona = codigo_recurso
-              AND UPPER(ot.Estado) NOT IN ('FINALIZADA', 'CANCELADA')
+              AND UPPER(ot.Estado) NOT IN ('COMPLETADA', 'FINALIZADA', 'CANCELADA')
         ) INTO existe_asignacion;
 
     ELSIF TG_TABLE_NAME = 'herramientas' THEN
@@ -240,7 +240,7 @@ BEGIN
             INNER JOIN CabeceraOrdenTrabajo ot
                 ON ot.CodDocumento = d.CodDocumento
             WHERE d.CodHerramientas = codigo_recurso
-              AND UPPER(ot.Estado) NOT IN ('FINALIZADA', 'CANCELADA')
+              AND UPPER(ot.Estado) NOT IN ('COMPLETADA', 'FINALIZADA', 'CANCELADA')
         ) INTO existe_asignacion;
 
     ELSIF TG_TABLE_NAME = 'maquinaria' THEN
@@ -253,7 +253,7 @@ BEGIN
             INNER JOIN CabeceraOrdenTrabajo ot
                 ON ot.CodDocumento = d.CodDocumento
             WHERE d.CodMaquinaria = codigo_recurso
-              AND UPPER(ot.Estado) NOT IN ('FINALIZADA', 'CANCELADA')
+              AND UPPER(ot.Estado) NOT IN ('COMPLETADA', 'FINALIZADA', 'CANCELADA')
         ) INTO existe_asignacion;
 
     ELSIF TG_TABLE_NAME = 'materiales' THEN
@@ -266,7 +266,7 @@ BEGIN
             INNER JOIN CabeceraOrdenTrabajo ot
                 ON ot.CodDocumento = d.CodDocumento
             WHERE d.CodMateriales = codigo_recurso
-              AND UPPER(ot.Estado) NOT IN ('FINALIZADA', 'CANCELADA')
+              AND UPPER(ot.Estado) NOT IN ('COMPLETADA', 'FINALIZADA', 'CANCELADA')
         ) INTO existe_asignacion;
 
     ELSIF TG_TABLE_NAME = 'repuesto' THEN
@@ -281,7 +281,7 @@ BEGIN
             INNER JOIN CabeceraOrdenTrabajo ot
                 ON ot.CodDocumento = d.CodDocumento
             WHERE m.CodRepuesto = codigo_recurso
-              AND UPPER(ot.Estado) NOT IN ('FINALIZADA', 'CANCELADA')
+              AND UPPER(ot.Estado) NOT IN ('COMPLETADA', 'FINALIZADA', 'CANCELADA')
         ) INTO existe_asignacion;
 
     END IF;
@@ -292,9 +292,14 @@ BEGIN
             USING ERRCODE = '23503';
     END IF;
 
+    IF TG_OP = 'UPDATE' THEN
+        RETURN NEW;
+    END IF;
+
     RETURN OLD;
 END;
 $$;
+
 
 CREATE TRIGGER trg_proteger_persona
 BEFORE DELETE ON Persona
@@ -352,18 +357,6 @@ CREATE TRIGGER trg_proteger_baja_materiales
 BEFORE UPDATE OF activo ON Materiales
 FOR EACH ROW WHEN (OLD.activo = TRUE AND NEW.activo = FALSE)
 EXECUTE FUNCTION proteger_recurso_asignado();
-
-CREATE OR REPLACE FUNCTION fn_siguiente_codigo_orden()
-RETURNS VARCHAR
-LANGUAGE plpgsql AS $$
-DECLARE
-    v_max INTEGER;
-BEGIN
-    PERFORM pg_advisory_xact_lock(7001);
-    SELECT COALESCE(MAX(substring(CodDocumento::text FROM 4)::int), 0) INTO v_max
-      FROM CabeceraOrdenTrabajo WHERE CodDocumento::text ~ '^DOC[0-9]{7}$';
-    RETURN 'DOC' || lpad((v_max + 1)::text, 7, '0');
-END $$;
 
 -- Usuarios para iniciar sesion
 INSERT INTO usuarios (username, password, rol, activo) VALUES
