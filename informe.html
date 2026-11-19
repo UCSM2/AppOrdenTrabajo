@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Informe de Orden de Trabajo</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body class="report-body">
+  <div class="no-print toolbar-print">
+    <button id="btn-print" class="btn btn-primary">Imprimir / Guardar PDF</button>
+    <button id="btn-close" class="btn btn-secondary">Cerrar Pestaña</button>
+  </div>
+
+  <div class="doc-sheet" id="doc-sheet">
+    <div class="doc-header">
+      <div class="doc-logo">MANTENIMIENTO<br><small>ÁREA OPERATIVA</small></div>
+      <div class="doc-title">
+        <div class="doc-code" id="inf-cod">DOC0000000</div>
+        <h2 id="inf-desc">Cargando orden...</h2>
+      </div>
+      <div class="doc-meta">
+        <div><strong>Documento Controlado</strong></div>
+        <div>Generado por: <span id="inf-enc">-</span></div>
+        <div>Fecha Revisión: <span id="inf-fecha">-</span></div>
+        <div>Estado: <span id="inf-estado">-</span></div>
+      </div>
+    </div>
+
+    <div class="doc-section">
+      <h3>1. Personal Asignado (Horas Hombre)</h3>
+      <table class="doc-table">
+        <thead>
+          <tr><th>Cantidad</th><th>Horas Hombre</th><th>Especialidad</th></tr>
+        </thead>
+        <tbody id="inf-personas"></tbody>
+      </table>
+    </div>
+
+    <div class="doc-section">
+      <h3>2. Materiales y Repuestos</h3>
+      <table class="doc-table">
+        <thead>
+          <tr><th>Cantidad</th><th>Descripción del Material</th><th>Cód. Repuesto</th><th>Cód. Fabricante</th></tr>
+        </thead>
+        <tbody id="inf-materiales"></tbody>
+      </table>
+    </div>
+
+    <div class="doc-section">
+      <h3>3. Herramientas</h3>
+      <table class="doc-table">
+        <thead>
+          <tr><th>Cantidad</th><th>Horas Uso</th><th>Descripción de Herramienta</th></tr>
+        </thead>
+        <tbody id="inf-herramientas"></tbody>
+      </table>
+    </div>
+
+    <div class="doc-section">
+      <h3>4. Maquinaria y Equipos</h3>
+      <table class="doc-table">
+        <thead>
+          <tr><th>Cantidad</th><th>Horas Uso</th><th>Descripción de Maquinaria</th></tr>
+        </thead>
+        <tbody id="inf-maquinaria"></tbody>
+      </table>
+    </div>
+  </div>
+  <script src="/app.js"></script>
+</body>
+</html>
