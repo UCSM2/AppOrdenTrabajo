@@ -1049,3 +1049,308 @@ BEGIN
         CALL sp_agregar_det_herramienta('DOC0000007', 'HER003', 6.00, 1);
     END IF;
 END $$;
+
+-- DATOS DE PRUEBA ADICIONALES (40 órdenes entre junio y noviembre de 2026)
+DO $$
+BEGIN
+    IF NOT EXISTS (SELECT 1 FROM Encargado WHERE CodEncargado = 'ENC003') THEN
+        INSERT INTO Fabricante (CodFabricante) VALUES ('SKF');
+        INSERT INTO Fabricante (CodFabricante) VALUES ('WEG');
+        INSERT INTO Fabricante (CodFabricante) VALUES ('LINCOL');
+        INSERT INTO Fabricante (CodFabricante) VALUES ('GATES');
+        INSERT INTO Fabricante (CodFabricante) VALUES ('PARKER');
+        INSERT INTO Repuesto (CodRepuesto) VALUES ('22222E');
+        INSERT INTO Repuesto (CodRepuesto) VALUES ('W22-75');
+        INSERT INTO Repuesto (CodRepuesto) VALUES ('E7018');
+        INSERT INTO Repuesto (CodRepuesto) VALUES ('B-75');
+        INSERT INTO Repuesto (CodRepuesto) VALUES ('HYD-12');
+        INSERT INTO Repuesto (CodRepuesto) VALUES ('LGEP2');
+        INSERT INTO Encargado (CodEncargado, Nombre) VALUES ('ENC003', 'QUISPE, Rosa');
+        INSERT INTO Encargado (CodEncargado, Nombre) VALUES ('ENC004', 'MAMANI, Luis');
+        CALL sp_insertar_persona('PER007', 'Electricista Industrial');
+        CALL sp_insertar_persona('PER008', 'Soldador Homologado');
+        CALL sp_insertar_persona('PER009', 'Técnico Hidráulico');
+        CALL sp_insertar_persona('PER010', 'Supervisor de Seguridad');
+        CALL sp_insertar_persona('PER011', 'Mecánico de Equipo Pesado');
+        CALL sp_insertar_persona('PER012', 'Técnico Predictivo');
+        CALL sp_insertar_maquinaria('MAQ005', 'Grúa Puente 20 t Nave de Molienda');
+        CALL sp_insertar_maquinaria('MAQ007', 'Camión Grúa HIAB 15 t');
+        CALL sp_insertar_maquinaria('MAQ008', 'Manipulador Telescópico JLG 1055');
+        CALL sp_insertar_maquinaria('MAQ009', 'Compresor de Aire Portátil Atlas Copco XAS 185');
+        CALL sp_insertar_maquinaria('MAQ010', 'Grupo Electrógeno 150 kVA');
+        CALL sp_insertar_herramienta('HER004', 'Torquímetro Hidráulico');
+        CALL sp_insertar_herramienta('HER005', 'Analizador de Vibraciones');
+        CALL sp_insertar_herramienta('HER006', 'Cámara Termográfica');
+        CALL sp_insertar_herramienta('HER007', 'Máquina de Soldar MIG');
+        CALL sp_insertar_herramienta('HER008', 'Megóhmetro 5 kV');
+        CALL sp_insertar_herramienta('HER009', 'Juego de Extractores Hidráulicos');
+        CALL sp_insertar_herramienta('HER010', 'Kit de Izaje (eslingas y grilletes)');
+        CALL sp_insertar_material('MAT007', '22222E', 'SKF', 'Rodamiento de rodillos esféricos 22222 E');
+        CALL sp_insertar_material('MAT008', 'W22-75', 'WEG', 'Motor eléctrico trifásico W22 75 HP');
+        CALL sp_insertar_material('MAT009', 'E7018', 'LINCOL', 'Electrodo E7018 1/8 pulg. (kg)');
+        CALL sp_insertar_material('MAT010', 'B-75', 'GATES', 'Faja en V B-75');
+        CALL sp_insertar_material('MAT011', 'HYD-12', 'PARKER', 'Manguera hidráulica 1/2 pulg. 2 hilos (m)');
+        CALL sp_insertar_material('MAT012', 'LGEP2', 'SKF', 'Grasa de extrema presión LGEP 2 (kg)');
+    END IF;
+
+    IF NOT EXISTS (SELECT 1 FROM CabeceraOrdenTrabajo WHERE CodDocumento = 'DOC0000008') THEN
+        CALL sp_crear_orden('DOC0000008', 'ENC004', 'CAMBIO DE MANGUERAS HIDRÁULICAS EN EXCAVADORA PC3000', DATE '2026-06-01', 'COMPLETADA');
+        CALL sp_agregar_det_persona('DOC0000008', 'PER009', 10.00, 3);
+        CALL sp_agregar_det_persona('DOC0000008', 'PER011', 10.00, 3);
+        CALL sp_agregar_det_persona('DOC0000008', 'PER010', 2.00, 1);
+        CALL sp_agregar_det_material('DOC0000008', 'MAT011', 12);
+        CALL sp_agregar_det_herramienta('DOC0000008', 'HER002', 3.00, 2);
+        CALL sp_agregar_det_maquinaria('DOC0000008', 'MAQ002', 5.00, 1);
+
+        CALL sp_crear_orden('DOC0000009', 'ENC004', 'PRUEBA DE AISLAMIENTO DE MOTOR DE BOMBA DE RELAVES 1', DATE '2026-06-03', 'COMPLETADA');
+        CALL sp_agregar_det_persona('DOC0000009', 'PER007', 8.00, 2);
+        CALL sp_agregar_det_herramienta('DOC0000009', 'HER008', 4.00, 2);
+
+        CALL sp_crear_orden('DOC0000010', 'ENC004', 'PRUEBA DE AISLAMIENTO DE MOTOR DE BOMBA DE RELAVES 3', DATE '2026-06-20', 'COMPLETADA');
+        CALL sp_agregar_det_persona('DOC0000010', 'PER007', 6.00, 3);
+        CALL sp_agregar_det_herramienta('DOC0000010', 'HER008', 1.00, 1);
+
+        CALL sp_crear_orden('DOC0000011', 'ENC001', 'ALINEAMIENTO LÁSER DE BOMBA CENTRÍFUGA 2', DATE '2026-06-21', 'CANCELADA');
+        CALL sp_agregar_det_persona('DOC0000011', 'PER001', 8.00, 3);
+        CALL sp_agregar_det_persona('DOC0000011', 'PER010', 2.00, 1);
+        CALL sp_agregar_det_herramienta('DOC0000011', 'HER003', 6.00, 2);
+
+        CALL sp_crear_orden('DOC0000012', 'ENC004', 'REEMPLAZO DE MOTOR ELÉCTRICO DE AGITADOR 2', DATE '2026-06-23', 'COMPLETADA');
+        CALL sp_agregar_det_persona('DOC0000012', 'PER007', 12.00, 1);
+        CALL sp_agregar_det_persona('DOC0000012', 'PER004', 10.00, 3);
+        CALL sp_agregar_det_material('DOC0000012', 'MAT008', 8);
+        CALL sp_agregar_det_herramienta('DOC0000012', 'HER001', 8.00, 2);
+        CALL sp_agregar_det_herramienta('DOC0000012', 'HER010', 6.00, 2);
+        CALL sp_agregar_det_maquinaria('DOC0000012', 'MAQ005', 8.00, 1);
+
+        CALL sp_crear_orden('DOC0000013', 'ENC004', 'CAMBIO DE MANGUERAS HIDRÁULICAS EN EXCAVADORA PC3000', DATE '2026-06-26', 'COMPLETADA');
+        CALL sp_agregar_det_persona('DOC0000013', 'PER009', 4.00, 2);
+        CALL sp_agregar_det_persona('DOC0000013', 'PER011', 2.00, 1);
+        CALL sp_agregar_det_persona('DOC0000013', 'PER010', 2.00, 1);
+        CALL sp_agregar_det_material('DOC0000013', 'MAT011', 10);
+        CALL sp_agregar_det_herramienta('DOC0000013', 'HER002', 4.00, 2);
+        CALL sp_agregar_det_maquinaria('DOC0000013', 'MAQ002', 4.00, 1);
+
+        CALL sp_crear_orden('DOC0000014', 'ENC003', 'CAMBIO DE CADENA DE TRANSPORTADOR DE ARRASTRE 2', DATE '2026-06-27', 'COMPLETADA');
+        CALL sp_agregar_det_persona('DOC0000014', 'PER004', 6.00, 3);
+        CALL sp_agregar_det_persona('DOC0000014', 'PER011', 12.00, 2);
+        CALL sp_agregar_det_material('DOC0000014', 'MAT001', 9);
+        CALL sp_agregar_det_herramienta('DOC0000014', 'HER002', 8.00, 1);
+        CALL sp_agregar_det_herramienta('DOC0000014', 'HER010', 3.00, 2);
+        CALL sp_agregar_det_maquinaria('DOC0000014', 'MAQ004', 5.00, 1);
+
+        CALL sp_crear_orden('DOC0000015', 'ENC004', 'CAMBIO DE CADENA DE TRANSPORTADOR DE ARRASTRE 1', DATE '2026-06-29', 'COMPLETADA');
+        CALL sp_agregar_det_persona('DOC0000015', 'PER004', 12.00, 3);
+        CALL sp_agregar_det_persona('DOC0000015', 'PER011', 4.00, 2);
+        CALL sp_agregar_det_material('DOC0000015', 'MAT001', 3);
+        CALL sp_agregar_det_herramienta('DOC0000015', 'HER002', 4.00, 2);
+        CALL sp_agregar_det_herramienta('DOC0000015', 'HER010', 1.00, 2);
+        CALL sp_agregar_det_maquinaria('DOC0000015', 'MAQ004', 5.00, 1);
+
+        CALL sp_crear_orden('DOC0000016', 'ENC002', 'CAMBIO DE FILTROS DE AIRE CAMIÓN 797F N.° 1', DATE '2026-07-01', 'COMPLETADA');
+        CALL sp_agregar_det_persona('DOC0000016', 'PER011', 6.00, 1);
+        CALL sp_agregar_det_material('DOC0000016', 'MAT006', 1);
+        CALL sp_agregar_det_herramienta('DOC0000016', 'HER002', 1.00, 1);
+        CALL sp_agregar_det_maquinaria('DOC0000016', 'MAQ001', 5.00, 1);
+
+        CALL sp_crear_orden('DOC0000017', 'ENC002', 'LUBRICACIÓN GENERAL DE CHANCADORA SECUNDARIA', DATE '2026-07-24', 'COMPLETADA');
+        CALL sp_agregar_det_persona('DOC0000017', 'PER005', 8.00, 1);
+        CALL sp_agregar_det_material('DOC0000017', 'MAT002', 5);
+        CALL sp_agregar_det_material('DOC0000017', 'MAT012', 11);
+        CALL sp_agregar_det_herramienta('DOC0000017', 'HER001', 8.00, 2);
+
+        CALL sp_crear_orden('DOC0000018', 'ENC003', 'MEDICIÓN DE VIBRACIONES EN MOLINO DE BOLAS 1', DATE '2026-07-28', 'COMPLETADA');
+        CALL sp_agregar_det_persona('DOC0000018', 'PER012', 8.00, 2);
+        CALL sp_agregar_det_herramienta('DOC0000018', 'HER005', 2.00, 1);
+
+        CALL sp_crear_orden('DOC0000019', 'ENC003', 'REEMPLAZO DE MOTOR ELÉCTRICO DE AGITADOR 2', DATE '2026-08-01', 'COMPLETADA');
+        CALL sp_agregar_det_persona('DOC0000019', 'PER007', 10.00, 1);
+        CALL sp_agregar_det_persona('DOC0000019', 'PER004', 3.00, 3);
+        CALL sp_agregar_det_persona('DOC0000019', 'PER010', 2.00, 1);
+        CALL sp_agregar_det_material('DOC0000019', 'MAT008', 7);
+        CALL sp_agregar_det_herramienta('DOC0000019', 'HER001', 4.00, 1);
+        CALL sp_agregar_det_herramienta('DOC0000019', 'HER010', 6.00, 1);
+        CALL sp_agregar_det_maquinaria('DOC0000019', 'MAQ005', 5.00, 1);
+
+        CALL sp_crear_orden('DOC0000020', 'ENC004', 'CAMBIO DE RODAMIENTOS EN POLEA MOTRIZ FAJA CV-01', DATE '2026-08-04', 'COMPLETADA');
+        CALL sp_agregar_det_persona('DOC0000020', 'PER004', 2.00, 2);
+        CALL sp_agregar_det_persona('DOC0000020', 'PER011', 10.00, 2);
+        CALL sp_agregar_det_material('DOC0000020', 'MAT007', 1);
+        CALL sp_agregar_det_material('DOC0000020', 'MAT012', 1);
+        CALL sp_agregar_det_herramienta('DOC0000020', 'HER009', 6.00, 2);
+        CALL sp_agregar_det_herramienta('DOC0000020', 'HER004', 3.00, 2);
+        CALL sp_agregar_det_maquinaria('DOC0000020', 'MAQ005', 5.00, 1);
+
+        CALL sp_crear_orden('DOC0000021', 'ENC004', 'CAMBIO DE FILTROS DE AIRE CAMIÓN 797F N.° 1', DATE '2026-08-13', 'CANCELADA');
+        CALL sp_agregar_det_persona('DOC0000021', 'PER011', 8.00, 3);
+        CALL sp_agregar_det_material('DOC0000021', 'MAT006', 3);
+        CALL sp_agregar_det_herramienta('DOC0000021', 'HER002', 6.00, 1);
+        CALL sp_agregar_det_maquinaria('DOC0000021', 'MAQ001', 5.00, 1);
+
+        CALL sp_crear_orden('DOC0000022', 'ENC004', 'LUBRICACIÓN GENERAL DE CHANCADORA SECUNDARIA', DATE '2026-08-20', 'COMPLETADA');
+        CALL sp_agregar_det_persona('DOC0000022', 'PER005', 10.00, 3);
+        CALL sp_agregar_det_persona('DOC0000022', 'PER010', 2.00, 1);
+        CALL sp_agregar_det_material('DOC0000022', 'MAT002', 7);
+        CALL sp_agregar_det_material('DOC0000022', 'MAT012', 1);
+        CALL sp_agregar_det_herramienta('DOC0000022', 'HER001', 2.00, 1);
+
+        CALL sp_crear_orden('DOC0000023', 'ENC004', 'CAMBIO DE RODAMIENTOS EN POLEA MOTRIZ FAJA CV-01', DATE '2026-08-21', 'COMPLETADA');
+        CALL sp_agregar_det_persona('DOC0000023', 'PER004', 10.00, 1);
+        CALL sp_agregar_det_persona('DOC0000023', 'PER011', 6.00, 3);
+        CALL sp_agregar_det_material('DOC0000023', 'MAT007', 1);
+        CALL sp_agregar_det_material('DOC0000023', 'MAT012', 3);
+        CALL sp_agregar_det_herramienta('DOC0000023', 'HER009', 8.00, 1);
+        CALL sp_agregar_det_herramienta('DOC0000023', 'HER004', 6.00, 1);
+        CALL sp_agregar_det_maquinaria('DOC0000023', 'MAQ005', 3.00, 1);
+
+        CALL sp_crear_orden('DOC0000024', 'ENC004', 'CAMBIO DE ACEITE DE REDUCTOR DE MOLINO SAG', DATE '2026-08-27', 'COMPLETADA');
+        CALL sp_agregar_det_persona('DOC0000024', 'PER005', 8.00, 2);
+        CALL sp_agregar_det_persona('DOC0000024', 'PER004', 12.00, 1);
+        CALL sp_agregar_det_persona('DOC0000024', 'PER010', 2.00, 1);
+        CALL sp_agregar_det_material('DOC0000024', 'MAT003', 3);
+        CALL sp_agregar_det_herramienta('DOC0000024', 'HER002', 3.00, 1);
+        CALL sp_agregar_det_maquinaria('DOC0000024', 'MAQ009', 4.00, 1);
+
+        CALL sp_crear_orden('DOC0000025', 'ENC004', 'REEMPLAZO DE MOTOR ELÉCTRICO DE AGITADOR 4', DATE '2026-08-29', 'COMPLETADA');
+        CALL sp_agregar_det_persona('DOC0000025', 'PER007', 3.00, 2);
+        CALL sp_agregar_det_persona('DOC0000025', 'PER004', 8.00, 2);
+        CALL sp_agregar_det_material('DOC0000025', 'MAT008', 9);
+        CALL sp_agregar_det_herramienta('DOC0000025', 'HER001', 6.00, 2);
+        CALL sp_agregar_det_herramienta('DOC0000025', 'HER010', 1.00, 1);
+        CALL sp_agregar_det_maquinaria('DOC0000025', 'MAQ005', 3.00, 1);
+
+        CALL sp_crear_orden('DOC0000026', 'ENC004', 'CAMBIO DE RODAMIENTOS EN POLEA MOTRIZ FAJA CV-01', DATE '2026-08-31', 'COMPLETADA');
+        CALL sp_agregar_det_persona('DOC0000026', 'PER004', 6.00, 3);
+        CALL sp_agregar_det_persona('DOC0000026', 'PER011', 12.00, 3);
+        CALL sp_agregar_det_persona('DOC0000026', 'PER010', 2.00, 1);
+        CALL sp_agregar_det_material('DOC0000026', 'MAT007', 1);
+        CALL sp_agregar_det_material('DOC0000026', 'MAT012', 6);
+        CALL sp_agregar_det_herramienta('DOC0000026', 'HER009', 2.00, 2);
+        CALL sp_agregar_det_herramienta('DOC0000026', 'HER004', 6.00, 1);
+        CALL sp_agregar_det_maquinaria('DOC0000026', 'MAQ005', 2.00, 1);
+
+        CALL sp_crear_orden('DOC0000027', 'ENC002', 'LUBRICACIÓN GENERAL DE CHANCADORA SECUNDARIA', DATE '2026-09-05', 'COMPLETADA');
+        CALL sp_agregar_det_persona('DOC0000027', 'PER005', 8.00, 2);
+        CALL sp_agregar_det_material('DOC0000027', 'MAT002', 3);
+        CALL sp_agregar_det_material('DOC0000027', 'MAT012', 2);
+        CALL sp_agregar_det_herramienta('DOC0000027', 'HER001', 3.00, 1);
+
+        CALL sp_crear_orden('DOC0000028', 'ENC001', 'PRUEBA DE AISLAMIENTO DE MOTOR DE BOMBA DE RELAVES 2', DATE '2026-09-10', 'COMPLETADA');
+        CALL sp_agregar_det_persona('DOC0000028', 'PER007', 12.00, 2);
+        CALL sp_agregar_det_herramienta('DOC0000028', 'HER008', 2.00, 1);
+
+        CALL sp_crear_orden('DOC0000029', 'ENC003', 'CAMBIO DE FAJAS EN V DE ZARANDA VIBRATORIA 3', DATE '2026-09-16', 'COMPLETADA');
+        CALL sp_agregar_det_persona('DOC0000029', 'PER004', 2.00, 2);
+        CALL sp_agregar_det_material('DOC0000029', 'MAT010', 3);
+        CALL sp_agregar_det_herramienta('DOC0000029', 'HER002', 3.00, 2);
+
+        CALL sp_crear_orden('DOC0000030', 'ENC004', 'INSPECCIÓN TERMOGRÁFICA DE TABLEROS ELÉCTRICOS SUBESTACIÓN 1', DATE '2026-09-21', 'COMPLETADA');
+        CALL sp_agregar_det_persona('DOC0000030', 'PER007', 12.00, 2);
+        CALL sp_agregar_det_herramienta('DOC0000030', 'HER006', 1.00, 1);
+
+        CALL sp_crear_orden('DOC0000031', 'ENC001', 'INSPECCIÓN TERMOGRÁFICA DE TABLEROS ELÉCTRICOS SUBESTACIÓN 2', DATE '2026-09-24', 'COMPLETADA');
+        CALL sp_agregar_det_persona('DOC0000031', 'PER007', 2.00, 3);
+        CALL sp_agregar_det_herramienta('DOC0000031', 'HER006', 3.00, 2);
+
+        CALL sp_crear_orden('DOC0000032', 'ENC001', 'ALINEAMIENTO LÁSER DE BOMBA CENTRÍFUGA 4', DATE '2026-10-04', 'CANCELADA');
+        CALL sp_agregar_det_persona('DOC0000032', 'PER001', 4.00, 3);
+        CALL sp_agregar_det_persona('DOC0000032', 'PER010', 2.00, 1);
+        CALL sp_agregar_det_herramienta('DOC0000032', 'HER003', 4.00, 2);
+
+        CALL sp_crear_orden('DOC0000033', 'ENC003', 'CAMBIO DE ACEITE DE REDUCTOR DE MOLINO SAG', DATE '2026-10-04', 'EN PROCESO');
+        CALL sp_agregar_det_persona('DOC0000033', 'PER005', 10.00, 2);
+        CALL sp_agregar_det_persona('DOC0000033', 'PER004', 6.00, 2);
+        CALL sp_agregar_det_material('DOC0000033', 'MAT003', 6);
+        CALL sp_agregar_det_herramienta('DOC0000033', 'HER002', 1.00, 2);
+        CALL sp_agregar_det_maquinaria('DOC0000033', 'MAQ009', 2.00, 1);
+
+        CALL sp_crear_orden('DOC0000034', 'ENC003', 'CAMBIO DE MANGUERAS HIDRÁULICAS EN EXCAVADORA PC3000', DATE '2026-10-07', 'EN PROCESO');
+        CALL sp_agregar_det_persona('DOC0000034', 'PER009', 12.00, 1);
+        CALL sp_agregar_det_persona('DOC0000034', 'PER011', 4.00, 2);
+        CALL sp_agregar_det_persona('DOC0000034', 'PER010', 2.00, 1);
+        CALL sp_agregar_det_material('DOC0000034', 'MAT011', 1);
+        CALL sp_agregar_det_herramienta('DOC0000034', 'HER002', 6.00, 2);
+        CALL sp_agregar_det_maquinaria('DOC0000034', 'MAQ002', 3.00, 1);
+
+        CALL sp_crear_orden('DOC0000035', 'ENC001', 'CAMBIO DE FAJAS EN V DE ZARANDA VIBRATORIA 1', DATE '2026-10-10', 'COMPLETADA');
+        CALL sp_agregar_det_persona('DOC0000035', 'PER004', 2.00, 1);
+        CALL sp_agregar_det_persona('DOC0000035', 'PER010', 2.00, 1);
+        CALL sp_agregar_det_material('DOC0000035', 'MAT010', 9);
+        CALL sp_agregar_det_herramienta('DOC0000035', 'HER002', 3.00, 2);
+
+        CALL sp_crear_orden('DOC0000036', 'ENC002', 'CAMBIO DE RODAMIENTOS EN POLEA MOTRIZ FAJA CV-04', DATE '2026-10-10', 'COMPLETADA');
+        CALL sp_agregar_det_persona('DOC0000036', 'PER004', 6.00, 2);
+        CALL sp_agregar_det_persona('DOC0000036', 'PER011', 3.00, 2);
+        CALL sp_agregar_det_material('DOC0000036', 'MAT007', 3);
+        CALL sp_agregar_det_material('DOC0000036', 'MAT012', 3);
+        CALL sp_agregar_det_herramienta('DOC0000036', 'HER009', 6.00, 1);
+        CALL sp_agregar_det_herramienta('DOC0000036', 'HER004', 8.00, 2);
+        CALL sp_agregar_det_maquinaria('DOC0000036', 'MAQ005', 4.00, 1);
+
+        CALL sp_crear_orden('DOC0000037', 'ENC002', 'ALINEAMIENTO LÁSER DE BOMBA CENTRÍFUGA 2', DATE '2026-10-16', 'COMPLETADA');
+        CALL sp_agregar_det_persona('DOC0000037', 'PER001', 4.00, 3);
+        CALL sp_agregar_det_herramienta('DOC0000037', 'HER003', 3.00, 2);
+
+        CALL sp_crear_orden('DOC0000038', 'ENC002', 'MEDICIÓN DE VIBRACIONES EN MOLINO DE BOLAS 1', DATE '2026-10-19', 'COMPLETADA');
+        CALL sp_agregar_det_persona('DOC0000038', 'PER012', 10.00, 3);
+        CALL sp_agregar_det_herramienta('DOC0000038', 'HER005', 3.00, 2);
+
+        CALL sp_crear_orden('DOC0000039', 'ENC002', 'CAMBIO DE RODAMIENTOS EN POLEA MOTRIZ FAJA CV-01', DATE '2026-10-21', 'COMPLETADA');
+        CALL sp_agregar_det_persona('DOC0000039', 'PER004', 3.00, 3);
+        CALL sp_agregar_det_persona('DOC0000039', 'PER011', 8.00, 1);
+        CALL sp_agregar_det_material('DOC0000039', 'MAT007', 7);
+        CALL sp_agregar_det_material('DOC0000039', 'MAT012', 12);
+        CALL sp_agregar_det_herramienta('DOC0000039', 'HER009', 3.00, 1);
+        CALL sp_agregar_det_herramienta('DOC0000039', 'HER004', 6.00, 2);
+        CALL sp_agregar_det_maquinaria('DOC0000039', 'MAQ005', 4.00, 1);
+
+        CALL sp_crear_orden('DOC0000040', 'ENC003', 'MANTENIMIENTO DE GRUPO ELECTRÓGENO DE EMERGENCIA', DATE '2026-10-21', 'COMPLETADA');
+        CALL sp_agregar_det_persona('DOC0000040', 'PER007', 10.00, 2);
+        CALL sp_agregar_det_persona('DOC0000040', 'PER005', 8.00, 2);
+        CALL sp_agregar_det_material('DOC0000040', 'MAT002', 11);
+        CALL sp_agregar_det_herramienta('DOC0000040', 'HER001', 6.00, 2);
+        CALL sp_agregar_det_maquinaria('DOC0000040', 'MAQ010', 3.00, 1);
+
+        CALL sp_crear_orden('DOC0000041', 'ENC002', 'MEDICIÓN DE VIBRACIONES EN MOLINO DE BOLAS 4', DATE '2026-10-25', 'COMPLETADA');
+        CALL sp_agregar_det_persona('DOC0000041', 'PER012', 2.00, 2);
+        CALL sp_agregar_det_herramienta('DOC0000041', 'HER005', 6.00, 2);
+
+        CALL sp_crear_orden('DOC0000042', 'ENC002', 'ALINEAMIENTO LÁSER DE BOMBA CENTRÍFUGA 1', DATE '2026-10-29', 'COMPLETADA');
+        CALL sp_agregar_det_persona('DOC0000042', 'PER001', 4.00, 3);
+        CALL sp_agregar_det_herramienta('DOC0000042', 'HER003', 2.00, 1);
+
+        CALL sp_crear_orden('DOC0000043', 'ENC002', 'CAMBIO DE CADENA DE TRANSPORTADOR DE ARRASTRE 1', DATE '2026-11-01', 'PENDIENTE');
+        CALL sp_agregar_det_persona('DOC0000043', 'PER004', 10.00, 3);
+        CALL sp_agregar_det_persona('DOC0000043', 'PER011', 4.00, 3);
+        CALL sp_agregar_det_persona('DOC0000043', 'PER010', 2.00, 1);
+        CALL sp_agregar_det_material('DOC0000043', 'MAT001', 7);
+        CALL sp_agregar_det_herramienta('DOC0000043', 'HER002', 4.00, 1);
+        CALL sp_agregar_det_herramienta('DOC0000043', 'HER010', 6.00, 1);
+        CALL sp_agregar_det_maquinaria('DOC0000043', 'MAQ004', 2.00, 1);
+
+        CALL sp_crear_orden('DOC0000044', 'ENC003', 'MEDICIÓN DE VIBRACIONES EN MOLINO DE BOLAS 4', DATE '2026-11-05', 'PENDIENTE');
+        CALL sp_agregar_det_persona('DOC0000044', 'PER012', 4.00, 1);
+        CALL sp_agregar_det_herramienta('DOC0000044', 'HER005', 8.00, 1);
+
+        CALL sp_crear_orden('DOC0000045', 'ENC003', 'MEDICIÓN DE VIBRACIONES EN MOLINO DE BOLAS 3', DATE '2026-11-07', 'PENDIENTE');
+        CALL sp_agregar_det_persona('DOC0000045', 'PER012', 4.00, 1);
+        CALL sp_agregar_det_herramienta('DOC0000045', 'HER005', 2.00, 1);
+
+        CALL sp_crear_orden('DOC0000046', 'ENC004', 'MANTENIMIENTO DE GRUPO ELECTRÓGENO DE EMERGENCIA', DATE '2026-11-11', 'EN PROCESO');
+        CALL sp_agregar_det_persona('DOC0000046', 'PER007', 12.00, 3);
+        CALL sp_agregar_det_persona('DOC0000046', 'PER005', 3.00, 3);
+        CALL sp_agregar_det_material('DOC0000046', 'MAT002', 3);
+        CALL sp_agregar_det_herramienta('DOC0000046', 'HER001', 3.00, 1);
+        CALL sp_agregar_det_maquinaria('DOC0000046', 'MAQ010', 3.00, 1);
+
+        CALL sp_crear_orden('DOC0000047', 'ENC001', 'CAMBIO DE RODAMIENTOS EN POLEA MOTRIZ FAJA CV-01', DATE '2026-11-13', 'PENDIENTE');
+        CALL sp_agregar_det_persona('DOC0000047', 'PER004', 2.00, 2);
+        CALL sp_agregar_det_persona('DOC0000047', 'PER011', 4.00, 1);
+        CALL sp_agregar_det_material('DOC0000047', 'MAT007', 10);
+        CALL sp_agregar_det_material('DOC0000047', 'MAT012', 10);
+        CALL sp_agregar_det_herramienta('DOC0000047', 'HER009', 2.00, 1);
+        CALL sp_agregar_det_herramienta('DOC0000047', 'HER004', 1.00, 2);
+        CALL sp_agregar_det_maquinaria('DOC0000047', 'MAQ005', 5.00, 1);
+
+    END IF;
+END $$;
