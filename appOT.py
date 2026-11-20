@@ -13,8 +13,15 @@ from urllib.parse import parse_qs, unquote, urlparse
 
 import psycopg2
 from psycopg2 import pool
+import sys
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+if getattr(sys, "frozen", False):
+    BASE_DIR = sys._MEIPASS
+    ENV_DIR = os.path.dirname(sys.executable)
+else:
+    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+    ENV_DIR = BASE_DIR
+
 SESSION_TTL = 8 * 3600
 MAX_BODY = 1024 * 1024
 ESTADOS = ("PENDIENTE", "EN PROCESO", "COMPLETADA", "CANCELADA")
@@ -23,7 +30,7 @@ ROLES_BORRADO = ("ADMINISTRADOR",)
 
 def load_env():
     """Carga DATABASE_URL desde .env si no está definida en el entorno."""
-    path = os.path.join(BASE_DIR, ".env")
+    path = os.path.join(ENV_DIR, ".env")
     if not os.path.isfile(path):
         return
     with open(path, encoding="utf-8") as fh:
