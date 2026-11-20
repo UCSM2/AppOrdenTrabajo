@@ -1,1 +1,23 @@
+# Credenciales y configuración privada
 .env
+.env.*
+config.ini
+config/config.ini
+
+# Archivos compilados y temporales de PyInstaller
+build/
+dist/
+*.spec
+
+# Caché y entornos de Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+env/
+
+# Editores e IDEs
+.vscode/
+.idea/
+.DS_Store
