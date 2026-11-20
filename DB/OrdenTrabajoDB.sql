@@ -416,9 +416,10 @@ DECLARE
 BEGIN
     PERFORM pg_advisory_xact_lock(7001);
     SELECT COALESCE(MAX(substring(CodDocumento::text FROM 4)::int), 0) INTO v_max
-      FROM CabeceraOrdenTrabajo WHERE CodDocumento::text ~ '^OT-[0-9]{6}$';
-    RETURN 'OT-' || lpad((v_max + 1)::text, 6, '0');
+      FROM CabeceraOrdenTrabajo WHERE CodDocumento::text ~ '^DOC[0-9]{7}$';
+    RETURN 'DOC' || lpad((v_max + 1)::text, 7, '0');
 END $$;
+
 
 -- FUNCIONES DE CONSULTA
 CREATE OR REPLACE FUNCTION fn_listar_personas(p_buscar TEXT DEFAULT NULL)
