@@ -57,7 +57,10 @@ def get_pool():
     global _pool
     with _pool_lock:
         if _pool is None:
-            url = os.environ.get("DATABASE_URL")
+            url = os.environ.get("DATABASE_URL", "").strip().strip('"').strip("'")
+            # Si en el panel del hosting se pegó la línea entera (DATABASE_URL=...), se queda solo con la dirección
+            if url.upper().startswith("DATABASE_URL="):
+                url = url.split("=", 1)[1].strip().strip('"').strip("'")
             if not url:
                 raise HttpError(500, "Falta la variable de entorno DATABASE_URL en el servidor.")
             _pool = pool.ThreadedConnectionPool(1, 8, dsn=url, connect_timeout=10)
